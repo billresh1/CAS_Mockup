@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COMPASS — AI Workforce Impact Map · BDO USA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --surface2: #F3F2EE;
+  --border: #E4E2DB;
+  --border-light: #EDEBE5;
+  --tx: #1A1A18;
+  --tx2: #4A4A45;
+  --muted: #8A8A82;
+  --dim: #B0AFA8;
+  --brand: #1B2D4A;
+  --brand-light: #E6EBF2;
+  --c-color: #2563EB;
+  --a-color: #D97706;
+  --s-color: #DC2626;
+  --c-bg: rgba(37,99,235,0.06);
+  --a-bg: rgba(217,119,6,0.06);
+  --s-bg: rgba(220,38,38,0.06);
+  --transform-bg: #EEEDFE; --transform-tx: #534AB7;
+  --tool-bg: #E6F1FB; --tool-tx: #185FA5;
+  --reskill-bg: #FAEEDA; --reskill-tx: #854F0B;
+  --protect-bg: #E1F5EE; --protect-tx: #0F6E56;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--tx);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: 'DM Mono', monospace; }
+
+.page { max-width: 1200px; margin: 0 auto; padding: 40px 32px 80px; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+  border-bottom: 2px solid var(--brand);
+}
+.header-left {}
+.header .conf {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--brand);
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+.header .subtitle {
+  font-size: 16px;
+  color: var(--tx2);
+  font-weight: 500;
+}
+.header-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+.header-right .logo {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 4px;
+}
+.header-right .date {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  text-align: center;
+}
+.stat-card .num {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.2;
+}
+.stat-card .label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+.stat-card .explain {
+  font-size: 12px;
+  color: var(--dim);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.stat-card.featured {
+  border: 2px solid var(--brand);
+  background: var(--brand-light);
+}
+
+.controls-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.controls-bar .label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tx2);
+}
+.pill-group {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.pill {
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--surface);
+  color: var(--muted);
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.pill:not(:last-child) { border-right: 1px solid var(--border); }
+.pill.active {
+  background: var(--brand);
+  color: #fff;
+  font-weight: 600;
+}
+.pill:hover:not(.active) { background: var(--surface2); color: var(--tx2); }
+
+.legend {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+}
+.legend-swatch { width: 22px; height: 14px; border-radius: 3px; }
+
+.breadcrumb {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+}
+.breadcrumb .crumb {
+  cursor: pointer;
+  color: var(--c-color);
+  font-weight: 500;
+  transition: color 0.15s;
+}
+.breadcrumb .crumb:hover { color: var(--brand); text-decoration: underline; }
+.breadcrumb .sep { color: var(--dim); }
+
+.treemap-container {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.tm-node {
+  position: absolute;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: outline 0.12s, box-shadow 0.12s;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+}
+.tm-node:hover {
+  outline: 2px solid rgba(0,0,0,0.25);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  z-index: 10;
+}
+.tm-inner {
+  padding: 8px 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+.tm-name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.tm-meta {
+  font-size: 11px;
+  line-height: 1.3;
+  margin-top: 3px;
+  opacity: 0.75;
+}
+.tm-score {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: auto;
+  letter-spacing: -0.5px;
+}
+
+.detail-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 20px;
+}
+.dp-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.dp-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--tx);
+}
+.dp-hc {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.dp-scores {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.dp-score {
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+.dp-score .v {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.dp-score .l {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.dp-score.sc { background: var(--c-bg); }
+.dp-score.sc .v { color: var(--c-color); }
+.dp-score.sc .l { color: var(--c-color); }
+.dp-score.sa { background: var(--a-bg); }
+.dp-score.sa .v { color: var(--a-color); }
+.dp-score.sa .l { color: var(--a-color); }
+.dp-score.ss { background: var(--s-bg); }
+.dp-score.ss .v { color: var(--s-color); }
+.dp-score.ss .l { color: var(--s-color); }
+.dp-score.scomp { background: var(--brand-light); }
+.dp-score.scomp .v { color: var(--brand); }
+.dp-score.scomp .l { color: var(--brand); }
+
+.signal-tags { margin-bottom: 16px; }
+.signal-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 5px;
+  margin-right: 6px;
+  margin-bottom: 4px;
+}
+
+.bar-section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+.bar-label {
+  width: 200px;
+  color: var(--tx2);
+  text-align: right;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.bar-hc {
+  width: 60px;
+  color: var(--muted);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.bar-track {
+  flex: 1;
+  height: 20px;
+  background: var(--surface2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+.bar-val {
+  width: 36px;
+  font-weight: 700;
+  text-align: right;
+  flex-shrink: 0;
+}
+.bar-signal {
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.methodology {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.methodology .sec-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.methodology .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
+.methodology p { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 8px; }
+
+.footer {
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--dim);
+  display: flex;
+  justify-content: space-between;
+}
+
+.dim-explainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.dim-card {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid;
+}
+.dim-card .dim-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.dim-card .dim-desc { font-size: 12px; line-height: 1.5; }
+.dim-card.dc { background: var(--c-bg); border-color: rgba(37,99,235,0.12); }
+.dim-card.dc .dim-name { color: var(--c-color); }
+.dim-card.dc .dim-desc { color: #3B5998; }
+.dim-card.da { background: var(--a-bg); border-color: rgba(217,119,6,0.12); }
+.dim-card.da .dim-name { color: var(--a-color); }
+.dim-card.da .dim-desc { color: #8B6914; }
+.dim-card.ds { background: var(--s-bg); border-color: rgba(220,38,38,0.12); }
+.dim-card.ds .dim-name { color: var(--s-color); }
+.dim-card.ds .dim-desc { color: #991B1B; }
+
+@media (max-width: 768px) {
+  .page { padding: 24px 16px 60px; }
+  .summary-row { grid-template-columns: repeat(2, 1fr); }
+  .dim-explainer { grid-template-columns: 1fr; }
+  .dp-scores { grid-template-columns: repeat(2, 1fr); }
+  .bar-label { width: 120px; font-size: 12px; }
+  .bar-hc { width: 50px; font-size: 11px; }
+  .bar-signal { display: none; }
+  .header { flex-direction: column; gap: 12px; }
+  .header-right { text-align: left; }
+  .controls-bar { flex-direction: column; align-items: flex-start; }
+  .legend { margin-left: 0; }
+}
+
+@media print {
+  body { background: #fff; }
+  .controls-bar { break-inside: avoid; }
+  .detail-panel { break-inside: avoid; }
+  .tm-node { outline: 1px solid rgba(0,0,0,0.1) !important; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <div class="header-left">
+    <div class="conf">Confidential &middot; AI Workforce Impact Assessment</div>
+    <h1>Organizational AI Impact Map</h1>
+    <div class="subtitle">BDO USA &middot; 14,200 Professionals Across 4 Divisions</div>
+  </div>
+  <div class="header-right">
+    <div class="logo">COMPASS</div>
+    <div class="date">CAS Framework Assessment &middot; April 2026</div>
+  </div>
+</div>
+
+<div class="dim-explainer">
+  <div class="dim-card dc">
+    <div class="dim-name">Complementarity (C)</div>
+    <div class="dim-desc">How much AI creates new value when paired with this work. Higher = AI makes professionals significantly more capable.</div>
+  </div>
+  <div class="dim-card da">
+    <div class="dim-name">Augmentation (A)</div>
+    <div class="dim-desc">How much professionals need to change how they work to capture AI's value. Higher = more reskilling and workflow redesign needed.</div>
+  </div>
+  <div class="dim-card ds">
+    <div class="dim-name">Substitutivity (S)</div>
+    <div class="dim-desc">How much of this work AI can perform independently. Low = fundamentally human. High = partial automation feasible.</div>
+  </div>
+</div>
+
+<div class="summary-row" id="summaryRow"></div>
+
+<div class="controls-bar">
+  <span class="label">Color by:</span>
+  <div class="pill-group" id="dimPills"></div>
+  <div class="legend" id="legend"></div>
+</div>
+
+<div class="breadcrumb" id="breadcrumb"></div>
+<div class="treemap-container" id="treemap"></div>
+<div id="detailPanel"></div>
+
+<div class="methodology">
+  <div class="sec-label mono">Methodology</div>
+  <p><strong style="color:var(--tx2)">Framework:</strong> CAS methodology (Complementarity, Augmentation, Substitutivity) assessing AI's impact on workforce competencies across three dimensions simultaneously. Peer-reviewed and published (arXiv:2503.09637).</p>
+  <p><strong style="color:var(--tx2)">Assessment:</strong> Role competencies scored using a validated scoring pipeline against the O*NET occupational database (900+ occupations). Scores weighted by headcount to produce division- and org-level aggregates.</p>
+  <p><strong style="color:var(--tx2)">Reading the map:</strong> Block size = headcount (larger = more people). Block color = AI impact intensity on the selected dimension (darker = higher score). Click any block to drill into sub-units or view role-level detail.</p>
+</div>
+
+<div class="footer">
+  <span>COMPASS &middot; AI Workforce Impact Assessment</span>
+  <span>Confidential &middot; Prepared for BDO USA, P.C. &middot; April 2026</span>
+</div>
+
+</div>
+
+<script>
+const org = {
+  name: "BDO USA", hc: 14200, children: [
+    { name: "Tax", hc: 4100, children: [
+      { name: "Core tax compliance", hc: 1450, roles: [
+        { name: "Tax Partner", hc: 180, c: 3.2, a: 2.6, s: 1.3 },
+        { name: "Tax Managing Director", hc: 220, c: 3.5, a: 3.2, s: 1.8 },
+        { name: "Tax Manager", hc: 340, c: 3.8, a: 3.7, s: 2.4 },
+        { name: "Tax Senior Associate", hc: 420, c: 4.2, a: 4.1, s: 3.2 },
+        { name: "Tax Associate", hc: 290, c: 4.5, a: 4.4, s: 3.6 },
+      ]},
+      { name: "International tax", hc: 680, roles: [
+        { name: "International Tax Partner", hc: 85, c: 3.0, a: 2.4, s: 1.2 },
+        { name: "International Tax Manager", hc: 195, c: 3.6, a: 3.4, s: 2.2 },
+        { name: "Transfer Pricing Analyst", hc: 240, c: 4.2, a: 4.0, s: 2.8 },
+        { name: "International Tax Associate", hc: 160, c: 3.8, a: 3.6, s: 2.6 },
+      ]},
+      { name: "SALT", hc: 520, roles: [
+        { name: "SALT Partner", hc: 65, c: 3.0, a: 2.5, s: 1.3 },
+        { name: "SALT Manager", hc: 155, c: 3.7, a: 3.5, s: 2.4 },
+        { name: "SALT Senior Associate", hc: 180, c: 4.1, a: 3.9, s: 2.9 },
+        { name: "SALT Associate", hc: 120, c: 4.3, a: 4.0, s: 3.1 },
+      ]},
+      { name: "Tax technology", hc: 380, roles: [
+        { name: "Tax Tech Director", hc: 45, c: 3.8, a: 3.5, s: 2.2 },
+        { name: "Tax Automation Engineer", hc: 120, c: 4.6, a: 4.5, s: 3.5 },
+        { name: "Tax Data Analyst", hc: 130, c: 4.8, a: 4.4, s: 3.4 },
+        { name: "Tax Tech Associate", hc: 85, c: 4.2, a: 4.0, s: 2.8 },
+      ]},
+      { name: "Credits & incentives", hc: 410, roles: [
+        { name: "R&D Credits Manager", hc: 130, c: 3.6, a: 3.4, s: 2.1 },
+        { name: "Cost Segregation Specialist", hc: 95, c: 3.2, a: 3.0, s: 1.8 },
+        { name: "Credits Senior Associate", hc: 110, c: 3.8, a: 3.6, s: 2.3 },
+        { name: "Credits Associate", hc: 75, c: 3.5, a: 3.2, s: 2.0 },
+      ]},
+      { name: "Private client services", hc: 660, roles: [
+        { name: "PCS Partner", hc: 80, c: 2.8, a: 2.4, s: 1.1 },
+        { name: "PCS Manager", hc: 180, c: 3.4, a: 3.2, s: 2.0 },
+        { name: "PCS Senior Associate", hc: 220, c: 3.6, a: 3.4, s: 2.4 },
+        { name: "PCS Associate", hc: 180, c: 3.8, a: 3.6, s: 2.8 },
+      ]},
+    ]},
+    { name: "Assurance", hc: 3800, children: [
+      { name: "Core audit", hc: 2200, roles: [
+        { name: "Audit Partner", hc: 220, c: 3.1, a: 2.5, s: 1.2 },
+        { name: "Audit Senior Manager", hc: 330, c: 3.6, a: 3.3, s: 2.0 },
+        { name: "Audit Manager", hc: 440, c: 4.0, a: 3.8, s: 2.6 },
+        { name: "Audit Senior Associate", hc: 580, c: 4.5, a: 4.2, s: 3.2 },
+        { name: "Audit Associate", hc: 630, c: 4.6, a: 4.3, s: 3.4 },
+      ]},
+      { name: "SOC & IT audit", hc: 480, roles: [
+        { name: "IT Audit Manager", hc: 120, c: 4.2, a: 3.9, s: 2.8 },
+        { name: "SOC Specialist", hc: 180, c: 4.5, a: 4.2, s: 3.1 },
+        { name: "IT Audit Associate", hc: 180, c: 4.3, a: 4.0, s: 2.8 },
+      ]},
+      { name: "Accounting advisory", hc: 620, roles: [
+        { name: "Accounting Advisory Director", hc: 80, c: 3.2, a: 2.8, s: 1.4 },
+        { name: "Technical Accounting Manager", hc: 160, c: 3.7, a: 3.4, s: 2.1 },
+        { name: "Accounting Advisory Sr. Assoc.", hc: 200, c: 3.9, a: 3.6, s: 2.4 },
+        { name: "Accounting Advisory Associate", hc: 180, c: 4.0, a: 3.8, s: 2.5 },
+      ]},
+      { name: "Quality & risk", hc: 500, roles: [
+        { name: "National Quality Partner", hc: 40, c: 2.8, a: 2.2, s: 1.0 },
+        { name: "Quality Review Manager", hc: 140, c: 3.5, a: 3.2, s: 2.0 },
+        { name: "Independence Analyst", hc: 160, c: 3.8, a: 3.5, s: 2.3 },
+        { name: "Risk & Compliance Associate", hc: 160, c: 3.6, a: 3.4, s: 2.2 },
+      ]},
+    ]},
+    { name: "Advisory", hc: 3200, children: [
+      { name: "Transaction advisory", hc: 820, roles: [
+        { name: "TAS Partner", hc: 75, c: 3.2, a: 2.6, s: 1.2 },
+        { name: "TAS Director", hc: 120, c: 3.8, a: 3.5, s: 2.2 },
+        { name: "TAS Manager", hc: 210, c: 4.3, a: 3.9, s: 2.7 },
+        { name: "TAS Senior Associate", hc: 250, c: 4.7, a: 4.3, s: 3.2 },
+        { name: "TAS Associate", hc: 165, c: 4.6, a: 4.2, s: 3.1 },
+      ]},
+      { name: "Forensics & disputes", hc: 540, roles: [
+        { name: "Forensics Director", hc: 65, c: 3.4, a: 3.0, s: 1.6 },
+        { name: "Forensics Manager", hc: 145, c: 4.1, a: 3.7, s: 2.4 },
+        { name: "Forensics Sr. Associate", hc: 180, c: 4.4, a: 4.0, s: 2.8 },
+        { name: "Forensics Associate", hc: 150, c: 4.3, a: 3.9, s: 2.6 },
+      ]},
+      { name: "Management consulting", hc: 680, roles: [
+        { name: "Consulting Partner", hc: 60, c: 3.0, a: 2.4, s: 1.0 },
+        { name: "Consulting Director", hc: 100, c: 3.4, a: 3.1, s: 1.6 },
+        { name: "Consulting Manager", hc: 180, c: 3.8, a: 3.5, s: 2.0 },
+        { name: "Consulting Sr. Associate", hc: 200, c: 4.2, a: 3.8, s: 2.4 },
+        { name: "Consulting Associate", hc: 140, c: 4.0, a: 3.6, s: 2.2 },
+      ]},
+      { name: "Technology consulting", hc: 560, roles: [
+        { name: "Tech Consulting Director", hc: 55, c: 3.8, a: 3.4, s: 2.0 },
+        { name: "Solutions Architect", hc: 130, c: 4.6, a: 4.2, s: 3.1 },
+        { name: "Data & Analytics Manager", hc: 160, c: 4.8, a: 4.4, s: 3.3 },
+        { name: "Tech Consulting Associate", hc: 215, c: 4.5, a: 4.1, s: 3.0 },
+      ]},
+      { name: "Valuation & analytics", hc: 600, roles: [
+        { name: "Valuation Director", hc: 70, c: 3.5, a: 3.0, s: 1.6 },
+        { name: "Valuation Manager", hc: 150, c: 4.1, a: 3.7, s: 2.5 },
+        { name: "Business Analyst", hc: 220, c: 4.6, a: 4.2, s: 3.1 },
+        { name: "Valuation Associate", hc: 160, c: 4.4, a: 4.0, s: 2.8 },
+      ]},
+    ]},
+    { name: "Operations", hc: 3100, children: [
+      { name: "Information technology", hc: 820, roles: [
+        { name: "CIO / VP Technology", hc: 15, c: 3.2, a: 2.6, s: 1.0 },
+        { name: "IT Director", hc: 45, c: 3.6, a: 3.2, s: 2.0 },
+        { name: "Systems Engineer", hc: 180, c: 4.5, a: 4.2, s: 3.3 },
+        { name: "Software Developer", hc: 220, c: 4.8, a: 4.5, s: 3.6 },
+        { name: "IT Support Analyst", hc: 200, c: 4.3, a: 4.0, s: 3.4 },
+        { name: "Cybersecurity Analyst", hc: 160, c: 4.4, a: 4.1, s: 2.8 },
+      ]},
+      { name: "Human resources", hc: 480, roles: [
+        { name: "CHRO / VP People", hc: 10, c: 2.8, a: 2.2, s: 0.8 },
+        { name: "HR Director", hc: 35, c: 3.2, a: 2.8, s: 1.4 },
+        { name: "HR Business Partner", hc: 120, c: 3.6, a: 3.3, s: 2.2 },
+        { name: "Recruiter", hc: 140, c: 4.0, a: 3.7, s: 2.8 },
+        { name: "HR Coordinator", hc: 175, c: 3.8, a: 3.5, s: 2.6 },
+      ]},
+      { name: "Finance & accounting", hc: 620, roles: [
+        { name: "CFO / Controller", hc: 20, c: 3.0, a: 2.4, s: 1.0 },
+        { name: "Finance Manager", hc: 80, c: 3.8, a: 3.5, s: 2.4 },
+        { name: "Financial Analyst", hc: 180, c: 4.4, a: 4.1, s: 3.2 },
+        { name: "Accountant", hc: 200, c: 4.2, a: 3.9, s: 3.1 },
+        { name: "Accounts Payable/Receivable", hc: 140, c: 4.3, a: 4.0, s: 3.4 },
+      ]},
+      { name: "Marketing & BD", hc: 440, roles: [
+        { name: "CMO / VP Marketing", hc: 10, c: 3.0, a: 2.4, s: 1.0 },
+        { name: "Marketing Manager", hc: 60, c: 4.2, a: 3.8, s: 2.6 },
+        { name: "Content Strategist", hc: 80, c: 4.8, a: 4.4, s: 3.4 },
+        { name: "Digital Marketing Specialist", hc: 120, c: 4.6, a: 4.2, s: 3.2 },
+        { name: "BD Coordinator", hc: 90, c: 3.6, a: 3.2, s: 2.0 },
+        { name: "Proposal Writer", hc: 80, c: 4.5, a: 4.1, s: 3.0 },
+      ]},
+      { name: "Legal & compliance", hc: 280, roles: [
+        { name: "General Counsel", hc: 15, c: 2.8, a: 2.2, s: 0.8 },
+        { name: "Compliance Director", hc: 30, c: 3.2, a: 2.8, s: 1.4 },
+        { name: "Compliance Analyst", hc: 100, c: 3.6, a: 3.3, s: 2.0 },
+        { name: "Contracts Manager", hc: 65, c: 3.8, a: 3.5, s: 2.4 },
+        { name: "Legal Assistant", hc: 70, c: 3.4, a: 3.1, s: 2.0 },
+      ]},
+      { name: "Administration", hc: 460, roles: [
+        { name: "Office Manager", hc: 85, c: 3.0, a: 2.8, s: 2.0 },
+        { name: "Executive Assistant", hc: 120, c: 3.4, a: 3.2, s: 2.4 },
+        { name: "Administrative Coordinator", hc: 155, c: 3.2, a: 3.0, s: 2.6 },
+        { name: "Facilities Coordinator", hc: 100, c: 2.8, a: 2.6, s: 2.0 },
+      ]},
+    ]},
+  ]
+};
+
+const colorScales = {
+  composite: {
+    label: "AI impact (composite)",
+    ramp: ["#E8E6DE","#C0DD97","#97C459","#639922","#3B6D11"],
+    text: ["#4A4A45","#27500A","#173404","#EAF3DE","#EAF3DE"]
+  },
+  c: {
+    label: "Complementarity",
+    ramp: ["#E6F1FB","#85B7EB","#378ADD","#185FA5","#0C447C"],
+    text: ["#0C447C","#042C53","#E6F1FB","#E6F1FB","#E6F1FB"]
+  },
+  a: {
+    label: "Augmentation",
+    ramp: ["#FAEEDA","#FAC775","#EF9F27","#BA7517","#854F0B"],
+    text: ["#633806","#412402","#412402","#FAEEDA","#FAEEDA"]
+  },
+  s: {
+    label: "Substitutivity",
+    ramp: ["#FCEBEB","#F09595","#E24B4A","#A32D2D","#791F1F"],
+    text: ["#791F1F","#501313","#FCEBEB","#FCEBEB","#FCEBEB"]
+  }
+};
+
+let activeDim = "composite";
+let currentPath = [];
+
+function getScore(node, dim) {
+  if (node.roles) {
+    const totalHc = node.roles.reduce((s, r) => s + r.hc, 0);
+    if (dim === "composite") return node.roles.reduce((s, r) => s + r.hc * ((r.c + r.a + r.s) / 3), 0) / totalHc;
+    return node.roles.reduce((s, r) => s + r.hc * r[dim], 0) / totalHc;
+  }
+  if (node.children) {
+    const totalHc = node.children.reduce((s, c) => s + c.hc, 0);
+    return node.children.reduce((s, c) => s + c.hc * getScore(c, dim), 0) / totalHc;
+  }
+  if (dim === "composite") return (node.c + node.a + node.s) / 3;
+  return node[dim];
+}
+
+function getColorIdx(val) {
+  if (val <= 2.0) return 0;
+  if (val <= 2.8) return 1;
+  if (val <= 3.4) return 2;
+  if (val <= 4.0) return 3;
+  return 4;
+}
+
+function getSignal(c, a, s) {
+  if (c >= 4.0 && a >= 3.8 && s >= 2.8) return { label: "Transform", bg: "var(--transform-bg)", color: "var(--transform-tx)" };
+  if (a >= 3.5 && s <= 2.2) return { label: "Reskill", bg: "var(--reskill-bg)", color: "var(--reskill-tx)" };
+  if (c >= 3.5 && s <= 2.5) return { label: "Tool", bg: "var(--tool-bg)", color: "var(--tool-tx)" };
+  return { label: "Protect", bg: "var(--protect-bg)", color: "var(--protect-tx)" };
+}
+
+function squarify(items, x, y, w, h) {
+  const total = items.reduce((s, i) => s + i.hc, 0);
+  if (!items.length || total === 0) return [];
+  const rects = [];
+  let cx = x, cy = y, cw = w, ch = h;
+  const sorted = [...items].sort((a, b) => b.hc - a.hc);
+  let remaining = total;
+  let i = 0;
+
+  while (i < sorted.length) {
+    const horiz = cw >= ch;
+    const side = horiz ? ch : cw;
+    let row = [], rowArea = 0;
+
+    function worst(row, rowArea) {
+      const s = rowArea / remaining * (horiz ? cw : ch);
+      if (s === 0) return Infinity;
+      let mx = 0;
+      row.forEach(r => {
+        const area = (r.hc / remaining) * cw * ch;
+        const len = area / s;
+        mx = Math.max(mx, Math.max(s / len, len / s));
+      });
+      return mx;
+    }
+
+    while (i < sorted.length) {
+      const item = sorted[i];
+      const newRow = [...row, item];
+      const newArea = rowArea + item.hc;
+      if (row.length === 0 || worst(newRow, newArea) <= worst(row, rowArea)) {
+        row = newRow;
+        rowArea = newArea;
+        i++;
+      } else break;
+    }
+
+    const stripFrac = rowArea / remaining;
+    const stripSize = horiz ? Math.round(cw * stripFrac) : Math.round(ch * stripFrac);
+    let offset = horiz ? cy : cx;
+
+    row.forEach(r => {
+      const frac = r.hc / rowArea;
+      if (horiz) {
+        const ih = Math.round(ch * frac);
+        rects.push({ ...r, rx: cx, ry: offset, rw: stripSize, rh: ih });
+        offset += ih;
+      } else {
+        const iw = Math.round(cw * frac);
+        rects.push({ ...r, rx: offset, ry: cy, rw: iw, rh: stripSize });
+        offset += iw;
+      }
+    });
+
+    remaining -= rowArea;
+    if (horiz) { cx += stripSize; cw -= stripSize; }
+    else { cy += stripSize; ch -= stripSize; }
+  }
+  return rects;
+}
+
+function getCurrentNode() {
+  let node = org;
+  for (const idx of currentPath) {
+    node = (node.children || node.roles)[idx];
+  }
+  return node;
+}
+
+function getChildren(node) {
+  return node.children || node.roles || [];
+}
+
+function render() {
+  const scale = colorScales[activeDim];
+  const node = getCurrentNode();
+  const children = getChildren(node);
+
+  const orgC = getScore(org, "c");
+  const orgA = getScore(org, "a");
+  const orgS = getScore(org, "s");
+  const orgComp = (orgC + orgA + orgS) / 3;
+
+  document.getElementById("summaryRow").innerHTML = `
+    <div class="stat-card featured">
+      <div class="num" style="color:var(--brand)">${orgComp.toFixed(1)}</div>
+      <div class="label">Org AI impact</div>
+      <div class="explain">Composite (1-5 scale)</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:var(--c-color)">${orgC.toFixed(1)}</div>
+      <div class="label">Complementarity</div>
+      <div class="explain">AI enhances capability</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:var(--a-color)">${orgA.toFixed(1)}</div>
+      <div class="label">Augmentation</div>
+      <div class="explain">Workflow change needed</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:var(--s-color)">${orgS.toFixed(1)}</div>
+      <div class="label">Substitutivity</div>
+      <div class="explain">Displacement potential</div>
+    </div>
+  `;
+
+  document.getElementById("dimPills").innerHTML = Object.entries(colorScales).map(([k, v]) =>
+    `<button class="pill ${k === activeDim ? 'active' : ''}" onclick="activeDim='${k}';render()">${v.label}</button>`
+  ).join("");
+
+  document.getElementById("legend").innerHTML =
+    `<span>Low</span>` +
+    scale.ramp.map(c => `<div class="legend-swatch" style="background:${c}"></div>`).join("") +
+    `<span>High</span>`;
+
+  let bc = `<span class="crumb" onclick="currentPath=[];render()">BDO USA</span>`;
+  let trail = org;
+  currentPath.forEach((idx, i) => {
+    trail = (trail.children || trail.roles)[idx];
+    const ps = JSON.stringify(currentPath.slice(0, i + 1));
+    bc += `<span class="sep">/</span><span class="crumb" onclick="currentPath=${ps};render()">${trail.name}</span>`;
+  });
+  document.getElementById("breadcrumb").innerHTML = bc;
+
+  const container = document.getElementById("treemap");
+  const W = container.offsetWidth || 1136;
+  const H = Math.max(340, Math.min(520, Math.round(W * 0.5)));
+  container.style.height = H + "px";
+
+  const gap = 3;
+  const rects = squarify(children, 0, 0, W, H);
+
+  container.innerHTML = rects.map((r) => {
+    const score = getScore(r, activeDim);
+    const ci = getColorIdx(score);
+    const bg = scale.ramp[ci];
+    const tc = scale.text[ci];
+    const canDrill = r.children || r.roles;
+    const realIdx = children.findIndex(c => c.name === r.name);
+    const x = r.rx + gap;
+    const y = r.ry + gap;
+    const w = Math.max(0, r.rw - gap * 2);
+    const h = Math.max(0, r.rh - gap * 2);
+
+    let inner = "";
+    if (w > 55 && h > 28) inner += `<div class="tm-name" style="color:${tc}">${r.name}</div>`;
+    if (w > 75 && h > 48) inner += `<div class="tm-meta" style="color:${tc}">${r.hc.toLocaleString()} people</div>`;
+    if (w > 55 && h > 68) inner += `<div class="tm-score" style="color:${tc}">${score.toFixed(1)}</div>`;
+
+    const action = canDrill
+      ? `currentPath.push(${realIdx});render();`
+      : `showDetail(${realIdx});`;
+
+    return `<div class="tm-node" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:${bg};" onclick="${action}">
+      <div class="tm-inner">${inner}</div></div>`;
+  }).join("");
+
+  const isLeafLevel = !children.some(c => c.children || c.roles);
+  if (isLeafLevel) {
+    const largest = children.reduce((best, c) => c.hc > best.hc ? c : best, children[0]);
+    showDetail(children.indexOf(largest));
+  } else {
+    document.getElementById("detailPanel").innerHTML = "";
+  }
+}
+
+function showDetail(idx) {
+  const node = getCurrentNode();
+  const children = getChildren(node);
+  const item = children[idx];
+  if (!item) return;
+
+  const roles = item.roles || [item];
+  const c = getScore(item, "c");
+  const a = getScore(item, "a");
+  const s = getScore(item, "s");
+  const comp = (c + a + s) / 3;
+
+  const signals = {};
+  roles.forEach(r => {
+    const sig = getSignal(r.c || c, r.a || a, r.s || s);
+    if (!signals[sig.label]) signals[sig.label] = { ...sig, hc: 0 };
+    signals[sig.label].hc += (r.hc || 0);
+  });
+
+  let sigTags = Object.values(signals).map(s =>
+    `<span class="signal-tag" style="background:${s.bg};color:${s.color}">${s.label}: ${s.hc.toLocaleString()} people</span>`
+  ).join("");
+
+  const sortedRoles = [...roles].sort((a, b) => getScore(b, activeDim) - getScore(a, activeDim));
+  let bars = sortedRoles.map(r => {
+    const rv = getScore(r, activeDim);
+    const ci = getColorIdx(rv);
+    const bg = colorScales[activeDim].ramp[ci];
+    const sig = getSignal(r.c || c, r.a || a, r.s || s);
+    return `<div class="bar-row">
+      <div class="bar-label">${r.name}</div>
+      <div class="bar-hc">${r.hc.toLocaleString()}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(rv / 5) * 100}%;background:${bg}"></div></div>
+      <div class="bar-val">${rv.toFixed(1)}</div>
+      <div class="bar-signal"><span class="signal-tag" style="background:${sig.bg};color:${sig.color};font-size:11px;padding:2px 6px">${sig.label}</span></div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("detailPanel").innerHTML = `
+    <div class="detail-panel">
+      <div class="dp-header">
+        <div class="dp-title">${item.name}</div>
+        <div class="dp-hc">${item.hc.toLocaleString()} professionals</div>
+      </div>
+      <div class="dp-scores">
+        <div class="dp-score scomp"><div class="v">${comp.toFixed(1)}</div><div class="l">Composite</div></div>
+        <div class="dp-score sc"><div class="v">${c.toFixed(1)}</div><div class="l">Complementarity</div></div>
+        <div class="dp-score sa"><div class="v">${a.toFixed(1)}</div><div class="l">Augmentation</div></div>
+        <div class="dp-score ss"><div class="v">${s.toFixed(1)}</div><div class="l">Substitutivity</div></div>
+      </div>
+      <div class="signal-tags">${sigTags}</div>
+      <div class="bar-section-label">Roles by ${colorScales[activeDim].label.toLowerCase()}</div>
+      ${bars}
+    </div>
+  `;
+}
+
+window.addEventListener("DOMContentLoaded", render);
+window.addEventListener("resize", render);
+</script>
+</body>
+</html>
